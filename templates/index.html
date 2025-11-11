@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI FOTA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>A.I FOTA</h1>
+        <p>Analista Inteligente de Logs FOTA</p>
+        
+
+        <form id="analysis-form" method="POST" enctype="multipart/form-data">
+            <div class="file-input-group">
+                <label for="log_file"></label>
+                <input type="file" id="log_file" name="log_file" accept=".html" required>
+                <p>Faça o upload do arquivo de log no padrão <code>.txt</code> ou <code>.html</code></p>
+            </div>
+            <button type="submit">Analisar</button>
+        </form>
+
+        <div id="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Realizando análise dos resultados... Isso pode levar alguns instantes.</p>
+        </div>
+
+        {% if error %}
+            <div class="result-box error">
+                <h2>Erro</h2>
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+
+        {% if analysis_result %}
+            <div class="result-box">
+                <div class="result-header">
+                    <h2>Análise Técnica</h2>
+                    {% if analysis_time %}
+                        <span class="timer">Tempo de análise: {{ analysis_time }} segundos</span>
+                    {% endif %}
+                </div>
+                <pre>{{ analysis_result }}</pre>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('analysis-form').addEventListener('submit', function() {
+            const resultBox = document.querySelector('.result-box');
+            if (resultBox) {
+                resultBox.style.display = 'none';
+            }
+            document.getElementById('loading').style.display = 'block';
+            this.querySelector('button').disabled = true;
+            this.querySelector('button').textContent = 'Analisando...';
+        });
+    </script>
+</body>
+</html>
